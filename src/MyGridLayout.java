@@ -2,28 +2,36 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class MyGridLayout extends JPanel implements ActionListener {
+
+public class MyGridLayout extends JPanel implements ActionListener{
 
 	private JButton jbt[];
 	private JPanel jpl;
+	MainFrame frame;
 	private GridBagLayout layout;
 	private GridBagConstraints gbc;
-	private DisplayPanel displaypanel, getsomething;
-	private double a, b, result;
-	private int btnno;
+	private DisplayPanel displaypanel;
+	public static double a, b, result=0;
+	public static int btnno=0,count=0;
 	private String s;
 
-	public MyGridLayout() {
-
+	public MyGridLayout(MainFrame mainFrame, DisplayPanel display) {
+	    frame=mainFrame;
 		layout = new GridBagLayout();
 		setLayout(layout);
 		gbc = new GridBagConstraints();
-
-		jbt = new JButton[22];
+        
+		displaypanel=display;
+		
+		jbt = new JButton[21];
 		for (int i = 0; i < 10; i++) {
 			jbt[i] = new JButton(String.valueOf(i));
 		}
@@ -38,20 +46,13 @@ public class MyGridLayout extends JPanel implements ActionListener {
 		jbt[18] = new JButton(".");
 		jbt[19] = new JButton("^");
 		jbt[20] = new JButton("All Clear");
-		jbt[21] = new JButton("Del");
 
 		// first row
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.gridwidth = 3;
+		gbc.gridwidth = 5;
 		add(jbt[20], gbc);
-
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.gridx = 3;
-		gbc.gridy = 0;
-		gbc.gridwidth = 2;
-		add(jbt[21], gbc);
 
 		// second row
 		for (int i = 1, j = 0; i < 4; i++) {
@@ -139,6 +140,7 @@ public class MyGridLayout extends JPanel implements ActionListener {
 		for (int i = 0; i < jbt.length; i++) {
 
 			jbt[i].addActionListener(this);
+			
 		}
 
 	}
@@ -149,8 +151,13 @@ public class MyGridLayout extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+	
+		frame.requestFocusInWindow();
 		if (e.getSource() == jbt[0])
+		{
 			displaypanel.appendText("0");
+			System.out.println(e.getSource());
+		}
 		if (e.getSource() == jbt[1])
 			displaypanel.appendText("1");
 		if (e.getSource() == jbt[2])
@@ -171,75 +178,136 @@ public class MyGridLayout extends JPanel implements ActionListener {
 			displaypanel.appendText("9");
 		if (e.getSource() == jbt[18])
 			displaypanel.appendText(".");
+		if (e.getSource() == jbt[15])
+			displaypanel.appendText("-");
 
 		if (e.getSource() == jbt[20])
-			displaypanel.setText(null);
-
-		/*
-		 * if(e.getSource()==jbt[21]) { String s=displaypanel.appendText();
-		 * setText(""); for(int i=0;i<s.length()-1;i++)
-		 * t.setText(t.getText()+s.charAt(i)); }
-		 */
-		getsomething = new DisplayPanel();
+			displaypanel.setText("0");
 
 		if (e.getSource() == jbt[10]) {
-			a = Double.parseDouble(getsomething.getText());
+			if(count==0)a = Double.parseDouble(displaypanel.getText());
+			if(count>0){
+				somethinghappen();
+				a=result;
+			}
 			btnno = 1;
 			displaypanel.appendText1("+");
+			count++;
 		}
 		if (e.getSource() == jbt[11]) {
-			a = Double.parseDouble(getsomething.getText());
+			if(count==0)a = Double.parseDouble(displaypanel.getText());
+			if(count>0){
+				somethinghappen();
+				a=result;
+			}
 			btnno = 2;
 			displaypanel.appendText1("-");
+			count++;
 		}
 		if (e.getSource() == jbt[12]) {
-			a = Double.parseDouble(getsomething.getText());
+			if(count==0)a = Double.parseDouble(displaypanel.getText());
+			if(count>0){
+				somethinghappen();
+				a=result;
+			}
 			btnno = 3;
 			displaypanel.appendText1("*");
+			count++;
 		}
 		if (e.getSource() == jbt[13]) {
-			a = Double.parseDouble(getsomething.getText());
+			if(count==0)a = Double.parseDouble(displaypanel.getText());
+			if(count>0){
+				somethinghappen();
+				a=result;
+			}
 			btnno = 4;
 			displaypanel.appendText1("/");
+			count++;
 		}
-		/*
-		 * if(e.getSource()==jbt[16]){
-		 * a=Double.parseDouble(getsomething.getText()); btnno=5;
-		 * displaypanel.setText(null); } if(e.getSource()==jbt[17]){
-		 * a=Double.parseDouble(getsomething.getText()); btnno=6;
-		 * displaypanel.setText(null); } if(e.getSource()==jbt[19]){
-		 * a=Double.parseDouble(getsomething.getText()); btnno=7;
-		 * displaypanel.setText(null); }
-		 */
-
+		
+		 if(e.getSource()==jbt[16]){
+		  a = Double.parseDouble(displaypanel.getText());
+		  btnno=5;
+		  displaypanel.setText(null);
+		 displaypanel.appendText1("sqrt("+a+")"); 
+		 }
+		 
+		 if(e.getSource()==jbt[17]){
+		 a=Double.parseDouble(displaypanel.getText());
+		 btnno=6;
+		 displaypanel.setText(null);
+		 displaypanel.appendText1(a+"^2"); 
+		 }
+		
+		  if(e.getSource()==jbt[19]){
+		  a=Double.parseDouble(displaypanel.getText()); 
+		  btnno=7;
+		  displaypanel.appendText1("^");
+		  }
+		
 		if (e.getSource() == jbt[14]) {
-			b = Double.parseDouble(getsomething.getText());
-			// System.out.println(b);
-			switch (btnno) {
-
-			case 1:
-				result = a + b;
-				break;
-			case 2:
-				result = a - b;
-				break;
-			case 3:
-				result = a * b;
-				break;
-			case 4:
-				result = a / b;
-				break;
-			// case 5: result=Math.sqrt(a); break;
-			// case 6: result=Math.sqrt(a); break;
-			case 7:
-				result = Math.pow(a, b);
-				break;
-			default:
-				result = 0;
-			}
-			displaypanel.setText(null);
-			displaypanel.appendText(Double.toString(result));
+			
+			count=0;
+			somethinghappen();
 		}
-
+		
 	}
+	
+	
+	public void forkeyvariable(int b1){
+		
+		if(count==0)a = Double.parseDouble(displaypanel.getText());
+		if(count>0){
+			somethinghappen();
+			a=result;
+		}
+		btnno = b1;
+		count++;
+	}
+	
+	public void somethinghappen(){
+		
+		if(btnno!=5 && btnno!=6)
+		b = Double.parseDouble(displaypanel.getText());
+		
+		 System.out.println(a);
+		 System.out.println(b);
+		switch (btnno) {
+
+		
+		case 1:
+			result = a + b;
+			break;
+		case 2:
+			result = a - b;
+			break;
+		case 3:
+			result = a * b;
+			break;
+		case 4:
+			result = a / b;
+			break;
+		case 5: 
+			result=Math.sqrt(a); 
+			break;
+		case 6:
+			result=Math.pow(a,2);
+			break;
+		case 7:
+			result = Math.pow(a, b);
+			break;
+		default:
+			result = 0;
+		}
+		displaypanel.setText(null);
+		
+	
+		NumberFormat nf= NumberFormat.getInstance();
+		nf.setMaximumFractionDigits(4);
+		nf.setMinimumFractionDigits(0);
+		
+		//System.out.println("%.2f", result);		 
+		displaypanel.appendText((nf.format(result)));
+	}
+
 }
